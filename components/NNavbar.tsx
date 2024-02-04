@@ -16,7 +16,20 @@ import NThemeSwitcher from "./NThemeSwitcher";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 
+import type { RootState } from "@/stores";
+import { loadAuth, logoutAuth } from "@/stores/slice/authSlice";
+import { useSelector, useDispatch } from "react-redux";
+import { useEffect } from "react";
+
 export default function NNavbar() {
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(loadAuth());
+  }, []);
+
+  const token = useSelector((state: RootState) => state.auth.token);
+
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const menuItems = [
@@ -54,6 +67,10 @@ export default function NNavbar() {
       name: "Blogs",
       href: "/blogs",
     },
+    {
+      name: "Counter",
+      href: "/counter",
+    },
   ];
 
   const pathname = usePathname();
@@ -85,15 +102,26 @@ export default function NNavbar() {
           <NThemeSwitcher />
         </NavbarItem>
         <NavbarItem>
-          <Button
-            as={Link}
-            href="/login"
-            size="sm"
-            variant="ghost"
-            color="primary"
-          >
-            Login
-          </Button>
+          {token ? (
+            <Button
+              size="sm"
+              variant="ghost"
+              color="danger"
+              onClick={() => dispatch(logoutAuth())}
+            >
+              Logout
+            </Button>
+          ) : (
+            <Button
+              as={Link}
+              href="/login"
+              size="sm"
+              variant="ghost"
+              color="primary"
+            >
+              Login
+            </Button>
+          )}
         </NavbarItem>
       </NavbarContent>
       <NavbarMenu>

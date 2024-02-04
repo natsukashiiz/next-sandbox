@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import "./globals.css";
-import { Providers } from "./providers";
+import "@/app/globals.css";
 import NextTopLoader from "nextjs-toploader";
+import UIProviders from "@/app/ui-providers";
+import ReduxProvider from "@/app/redux-provider";
 
 // component import
 import NNavbar from "@/components/NNavbar";
@@ -23,10 +24,12 @@ export default function RootLayout({
     <html lang="en" className="light" suppressHydrationWarning>
       <body className={inter.className}>
         <NextTopLoader color="#fcc455" />
-        <Providers>
-          <NNavbar />
-          <div className="container mx-auto p-5">{children}</div>
-        </Providers>
+        <ReduxProvider>
+          <UIProviders>
+            <NNavbar />
+            <div className="container mx-auto p-5">{children}</div>
+          </UIProviders>
+        </ReduxProvider>
       </body>
     </html>
   );

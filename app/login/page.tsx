@@ -16,12 +16,17 @@ import { FormEvent, useState } from "react";
 import { login } from "@/api/auth";
 import type { ILoginRequest } from "@/api/types";
 
+import { loginAuth } from "@/stores/slice/authSlice";
+import { useDispatch } from "react-redux";
+
 export default function Page() {
+  const dispatch = useDispatch();
+
   const [isVisible, setIsVisible] = useState(false);
   const [loading, setLoading] = useState(false);
   const [form, setForm] = useState<ILoginRequest>({
-    username: "",
-    password: "",
+    username: "kminchelle",
+    password: "0lelplR",
   });
 
   const toggleVisibility = () => setIsVisible(!isVisible);
@@ -32,7 +37,7 @@ export default function Page() {
     try {
       const res = await login(form);
       if (res.status === 200) {
-        localStorage.setItem("token", res.data.token);
+        dispatch(loginAuth(res.data.token));
       } else {
         console.log(res);
       }
@@ -53,8 +58,9 @@ export default function Page() {
             variant="bordered"
             placeholder="Enter your email"
             onChange={(e) =>
-              setForm({ username: e.target.value, password: form.password })
+              setForm((prev) => ({ ...prev, username: e.target.value }))
             }
+            value={form.username}
           ></Input>
           <Input
             isRequired
@@ -76,8 +82,9 @@ export default function Page() {
             }
             type={isVisible ? "text" : "password"}
             onChange={(e) =>
-              setForm({ username: form.username, password: e.target.value })
+              setForm((prev) => ({ ...prev, password: e.target.value }))
             }
+            value={form.password}
           ></Input>
           <Button color="primary" type="submit" isLoading={loading}>
             Login
