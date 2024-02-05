@@ -25,10 +25,13 @@ export default function App() {
 
   return (
     <>
-      <Button size="sm" variant="ghost" color="danger" onPress={onOpen}>
-        Logout
-      </Button>
-      <Modal isOpen={isOpen} onOpenChange={onOpenChange} isDismissable={false}>
+      <div onClick={onOpen}>Logout</div>
+      <Modal
+        isOpen={isOpen}
+        onOpenChange={onOpenChange}
+        isDismissable={false}
+        hideCloseButton={true}
+      >
         <ModalContent>
           {(onClose) => (
             <>

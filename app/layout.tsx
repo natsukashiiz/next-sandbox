@@ -4,6 +4,7 @@ import "@/app/globals.css";
 import NextTopLoader from "nextjs-toploader";
 import UIProviders from "@/app/ui-providers";
 import ReduxProvider from "@/app/redux-provider";
+import { Toaster } from "react-hot-toast";
 
 // component import
 import NNavbar from "@/components/NNavbar";
@@ -26,6 +27,7 @@ export default function RootLayout({
         <NextTopLoader color="#fcc455" />
         <ReduxProvider>
           <UIProviders>
+            <Toaster />
             <NNavbar />
             <div className="container mx-auto p-5">{children}</div>
           </UIProviders>

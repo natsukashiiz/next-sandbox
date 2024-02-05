@@ -21,7 +21,11 @@ export default function App({ payload }: { payload: TokenPayload }) {
           src={payload.image}
         />
       </DropdownTrigger>
-      <DropdownMenu aria-label="Profile Actions" variant="flat">
+      <DropdownMenu
+        aria-label="Profile Actions"
+        variant="flat"
+        closeOnSelect={false}
+      >
         <DropdownItem key="profile" className="h-14 gap-2">
           <p className="font-semibold">{payload.username}</p>
         </DropdownItem>

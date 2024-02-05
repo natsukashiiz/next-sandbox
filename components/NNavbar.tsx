@@ -10,7 +10,6 @@ import {
   NavbarMenuItem,
   NavbarItem,
   Button,
-  Avatar,
 } from "@nextui-org/react";
 import { AcmeLogo } from "../icons/AcmeLogo";
 import NThemeSwitcher from "./NThemeSwitcher";

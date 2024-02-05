@@ -11,7 +11,7 @@ import {
   Divider,
 } from "@nextui-org/react";
 import Link from "next/link";
-import { FormEvent, useState } from "react";
+import { ChangeEvent, FormEvent, useState } from "react";
 
 import { login } from "@/api/auth";
 import type { ILoginRequest } from "@/api/types";
@@ -19,6 +19,10 @@ import type { ILoginRequest } from "@/api/types";
 import { loginAuth } from "@/stores/slice/authSlice";
 import { useDispatch } from "react-redux";
 import { useSearchParams, useRouter } from "next/navigation";
+
+import axios from "axios";
+
+import toast from "react-hot-toast";
 
 export default function Page() {
   const dispatch = useDispatch();
@@ -35,6 +39,13 @@ export default function Page() {
 
   const toggleVisibility = () => setIsVisible(!isVisible);
 
+  const handleChangeForm = (e: ChangeEvent<HTMLInputElement>) => {
+    setForm({
+      ...form,
+      [e.target.name]: e.target.value,
+    });
+  };
+
   const handleLogin = async (e: FormEvent) => {
     e.preventDefault();
     setLoading(true);
@@ -47,27 +58,31 @@ export default function Page() {
         console.log(res);
       }
     } catch (error: any) {
-      console.error(error);
+      if (axios.isAxiosError(error)) {
+        toast.error(error.response?.data.message);
+      } else {
+        console.error(error);
+      }
     }
     setLoading(false);
   };
 
   return (
-    <Card className="max-w-[400px] mx-auto">
+    <Card className="max-w-[400px] mx-auto mt-20">
       <CardHeader>Login</CardHeader>
       <CardBody>
         <form onSubmit={handleLogin} className="flex flex-col gap-2">
           <Input
+            name="username"
             isRequired
-            label="email"
+            label="username"
             variant="bordered"
-            placeholder="Enter your email"
-            onChange={(e) =>
-              setForm((prev) => ({ ...prev, username: e.target.value }))
-            }
-            value={form.username}
+            placeholder="Enter your username"
+            onChange={handleChangeForm}
+            defaultValue={form.username}
           ></Input>
           <Input
+            name="password"
             isRequired
             label="password"
             variant="bordered"
@@ -86,10 +101,8 @@ export default function Page() {
               </button>
             }
             type={isVisible ? "text" : "password"}
-            onChange={(e) =>
-              setForm((prev) => ({ ...prev, password: e.target.value }))
-            }
-            value={form.password}
+            onChange={handleChangeForm}
+            defaultValue={form.password}
           ></Input>
           <Button color="primary" type="submit" isLoading={loading}>
             Login
