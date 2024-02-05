@@ -10,6 +10,7 @@ import {
   NavbarMenuItem,
   NavbarItem,
   Button,
+  Avatar,
 } from "@nextui-org/react";
 import { AcmeLogo } from "../icons/AcmeLogo";
 import NThemeSwitcher from "./NThemeSwitcher";
@@ -17,18 +18,21 @@ import { usePathname } from "next/navigation";
 import Link from "next/link";
 
 import type { RootState } from "@/stores";
-import { loadAuth, logoutAuth } from "@/stores/slice/authSlice";
+import { loadAuth } from "@/stores/slice/authSlice";
 import { useSelector, useDispatch } from "react-redux";
 import { useEffect } from "react";
+
+import NAvatarMenu from "@/components/NAvatarMenu";
 
 export default function NNavbar() {
   const dispatch = useDispatch();
 
   useEffect(() => {
     dispatch(loadAuth());
-  }, []);
+  }, [dispatch]);
 
   const token = useSelector((state: RootState) => state.auth.token);
+  const payload = useSelector((state: RootState) => state.auth.payload);
 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
@@ -101,17 +105,14 @@ export default function NNavbar() {
         <NavbarItem>
           <NThemeSwitcher />
         </NavbarItem>
-        <NavbarItem>
-          {token ? (
-            <Button
-              size="sm"
-              variant="ghost"
-              color="danger"
-              onClick={() => dispatch(logoutAuth())}
-            >
-              Logout
-            </Button>
-          ) : (
+        {token ? (
+          <>
+            <NavbarItem>
+              {payload && <NAvatarMenu payload={payload} />}
+            </NavbarItem>
+          </>
+        ) : (
+          <NavbarItem>
             <Button
               as={Link}
               href="/login"
@@ -121,8 +122,8 @@ export default function NNavbar() {
             >
               Login
             </Button>
-          )}
-        </NavbarItem>
+          </NavbarItem>
+        )}
       </NavbarContent>
       <NavbarMenu>
         {menuItems.map((item, index) => (

@@ -18,15 +18,19 @@ import type { ILoginRequest } from "@/api/types";
 
 import { loginAuth } from "@/stores/slice/authSlice";
 import { useDispatch } from "react-redux";
+import { useSearchParams, useRouter } from "next/navigation";
 
 export default function Page() {
   const dispatch = useDispatch();
+  const router = useRouter();
+  const params = useSearchParams();
 
   const [isVisible, setIsVisible] = useState(false);
   const [loading, setLoading] = useState(false);
   const [form, setForm] = useState<ILoginRequest>({
     username: "kminchelle",
     password: "0lelplR",
+    expiresInMins: 1,
   });
 
   const toggleVisibility = () => setIsVisible(!isVisible);
@@ -38,6 +42,7 @@ export default function Page() {
       const res = await login(form);
       if (res.status === 200) {
         dispatch(loginAuth(res.data.token));
+        router.push(params.get("redirect") || "/");
       } else {
         console.log(res);
       }

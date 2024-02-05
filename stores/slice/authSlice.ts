@@ -1,39 +1,37 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 
-export interface AuthState {
-  token: string | null;
-}
+import { getCookie, setCookie, removeCookie } from "@/lib/cookieUtil";
+import type { AuthState, TokenPayload } from "@/api/types";
 
 const initialState: AuthState = {
   token: null,
+  payload: null,
 };
+
+const TOKEN_KEY = "token";
 
 export const authSlice = createSlice({
   name: "auth",
   initialState,
   reducers: {
     loadAuth: (state) => {
-      const tokenStore = localStorage.getItem("token");
-
-      if (window.location.pathname === "/login") {
-        return;
+      const token = getCookie(TOKEN_KEY);
+      if (token) {
+        state.token = token;
+        state.payload = JSON.parse(atob(token.split(".")[1])) as TokenPayload;
       }
-
-      if (!tokenStore) {
-        // window.location.href = "/login";
-      }
-
-      state.token = tokenStore;
     },
     loginAuth: (state, action: PayloadAction<string>) => {
+      setCookie(TOKEN_KEY, action.payload);
       state.token = action.payload;
-      localStorage.setItem("token", action.payload);
+      state.payload = JSON.parse(
+        atob(action.payload.split(".")[1])
+      ) as TokenPayload;
     },
     logoutAuth: (state) => {
       state.token = null;
-      localStorage.removeItem("token");
-      //   window.location.href = "/login";
+      removeCookie(TOKEN_KEY);
     },
   },
 });

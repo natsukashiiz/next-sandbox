@@ -21,6 +21,7 @@ export interface IPostResponse {
 export interface ILoginRequest {
   username: string;
   password: string;
+  expiresInMins?: number;
 }
 
 export interface ILoginResponse {
@@ -32,4 +33,21 @@ export interface ILoginResponse {
   gender: string;
   image: string;
   token: string;
+}
+
+export interface TokenPayload {
+  id: number;
+  username: string;
+  email: string;
+  firstName: string;
+  lastName: string;
+  gender: string;
+  image: string;
+  iat: number;
+  exp: number;
+}
+
+export interface AuthState {
+  token: string | null;
+  payload: TokenPayload | null;
 }
