@@ -110,7 +110,7 @@ export default function Page() {
         </form>
         <Divider className="my-3" />
         <div className="flex justify-end">
-          <Link href="/sign-up">Sign up</Link>
+          <Link href="/sign-up">Sign up :)</Link>
         </div>
       </CardBody>
     </Card>
